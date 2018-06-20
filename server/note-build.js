@@ -34,6 +34,7 @@ class NoteBuild {
   }
   writeArticleFile (data, name) {
     data = this.marked(data)
+    data.outline.name = name
     data = JSON.stringify(data)
     fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
       if (err) {

@@ -3,20 +3,21 @@
 import scopeElements from '@/modules/corejs/dom/scope-elements.js'
 export default {
   render () {
-    const { outlineData, foldLevel } = this
+    const { outlineData, foldLevel, selectedIndex } = this
+    const rootName = outlineData.name
     function build (children = []) {
       const list = []
       children.forEach(item => {
-        let {index, level, children, name} = item
+        let { index, level, children, name } = item
         const childList = build(children)
         list.push(
-          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={index + name}>
-            <div class="item" data-index={index}>
+          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + index} data-index={index}>
+            <div class={['item', index === selectedIndex && 'selected']}>
               <i class={children.length === 0 ? 'hidden' : ''}></i>
               <span class="txt">{name}</span>
             </div>
             <div class="list">{childList}</div>
-          </div>
+          </div >
         )
       })
 
@@ -35,7 +36,7 @@ export default {
             <a href="javascript:;" class="level">4</a>
           </div>
         </div>
-        <div class="menu-list" onClick={this.onFlod}>{menuList}</div>
+        <div class="menu-list" onClick={this.onFold}>{menuList}</div>
       </div>
     )
   },
@@ -45,26 +46,31 @@ export default {
   data () {
     return {
       key: '',
-      foldLevel: 1
+      foldLevel: 1,
+      selectedIndex: -1
     }
   },
   watch: {
     outlineData () {
-      console.log(this.outlineData)
-      // this.foldLevel = 1
+      this.foldLevel = 1
     }
   },
   methods: {
-    onFlod ({ target }) {
+    onFold ({ target }) {
       const end = this.$el
       scopeElements(target, elem => {
         if (elem === end) return false
-        let {classList} = elem
+        let { classList } = elem
         if (classList.contains('menu-item')) {
           if (classList.contains('fold')) {
             classList.remove('fold')
           } else {
             classList.add('fold')
+          }
+          let index = elem.dataset.index * 1
+          if (index !== this.selectedIndex) {
+            this.select(index)
+            this.$emit('select', index)
           }
           return false
         }
@@ -74,6 +80,9 @@ export default {
       if (target.tagName === 'A') {
         this.foldLevel = target.innerHTML
       }
+    },
+    select (index) {
+      this.selectedIndex = index
     }
   }
 }

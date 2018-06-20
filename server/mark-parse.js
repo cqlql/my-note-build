@@ -29,7 +29,9 @@ renderer.heading = function (text, level) {
   }
   hx = `${hx}<section><h${level} id="${text.replace(/<[^>]+>/g, '')}" data-index="${hIndex}">${text}</h${level}>`
   hIndex++
-  if (level !== pre) { hxNum++ }
+  if (level !== pre) {
+    hxNum++
+  }
   pre = level
   return hx
 }
@@ -42,7 +44,11 @@ marked.setOptions({
 })
 
 module.exports = function (content) {
+  hIndex = 0
+  pre = 0
+  hxNum = 0
   buildOutlint = BuildOutlint()
+
   content = marked(content)
   content = content + (new Array(hxNum + 1)).join('</section>')
   content = minify(content, {

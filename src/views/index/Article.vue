@@ -1,13 +1,42 @@
 <template>
   <div :class="$style.article">
-    <div class="markdown-body" v-html="content"></div>
+    <div class="markdown-body" v-html="content" @click="onSelect"></div>
   </div>
 </template>
 
 <script>
+import DomSelect from './dom-select.js'
 export default {
   props: {
     content: String
+  },
+  created () {
+    this.hxSelect = new DomSelect()
+    this.articleSelect = new DomSelect()
+  },
+  methods: {
+    onSelect ({ target }) {
+      if (/H\d/.test(target.tagName)) {
+        this.highlight(target)
+        this.$emit('select', target.dataset.index * 1)
+      }
+    },
+    highlight (hx) {
+      this.hxSelect.select(hx)
+      this.articleSelect.select(hx.parentElement)
+    },
+    select (index) {
+      const hx = this.hxs[index]
+      window.scrollTo(0, hx.offsetTop - 10)
+      this.highlight(hx)
+    }
+  },
+  watch: {
+    content () {
+      this.$nextTick(() => {
+        this.hxs = this.$el.querySelectorAll('h1,h2,h3,h4,h5,h6')
+      })
+    }
   }
 }
 </script>
@@ -496,6 +525,19 @@ export default {
     margin-bottom: 0;
     font: 12px SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
       monospace;
+  }
+
+  section.selected {
+    outline: 4px solid #fff;
+    box-shadow: #85cfff 0 0 0 6px;
+  }
+  h1.selected,
+  h2.selected,
+  h3.selected,
+  h4.selected,
+  h5.selected,
+  h6.selected {
+    background-color: #ffc;
   }
 
   .hljs {

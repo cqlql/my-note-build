@@ -4,10 +4,10 @@
       <vMenu ref="vMenu" :list="menuList" @select="onMenuSelect"/>
     </div>
     <div :class="$style.middle">
-      <Outline :outlineData="articleOutline"/>
+      <Outline :outlineData="articleOutline" @select="onOutline" ref="vOutline"/>
     </div>
     <div :class="$style.right">
-      <vArticle :content="articleContent"/>
+      <vArticle :content="articleContent" ref="vArticle" @select="onArticleSelect"/>
     </div>
   </div>
 </template>
@@ -49,6 +49,13 @@ export default {
         this.articleContent = content
         this.articleOutline = outline
       })
+    },
+    onOutline (index) {
+      this.$refs.vArticle.select(index)
+    },
+    onArticleSelect (index) {
+      console.log(index)
+      this.$refs.vOutline.select(index)
     }
   }
 }
