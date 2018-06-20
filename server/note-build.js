@@ -1,7 +1,8 @@
 const fs = require('fs-extra')
+const markeParse = require('./mark-parse')
 const notePath = 'E:\\github\\my-note'
 // const outPath = 'E:\\__admin\\Desktop\\note'
-const outPath = 'E:\\github\\my-note-build\\dist\data'
+const outPath = 'E:\\github\\my-note-build\\dist\\data'
 
 // 创建输出目录
 fs.ensureDirSync(outPath)
@@ -22,8 +23,19 @@ class NoteBuild {
     return data.replace(/#(#+)/g, '$1')
     // return data
   }
-  writeFile (data, name) {
-    fs.writeFile(`${outPath}\\${name}`, `cb_${name}(${JSON.stringify({data})})`, 'utf8', function (err) {
+  writeMenuFile (data) {
+    const name = 'menu_data'
+    data = JSON.stringify(data)
+    fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
+      if (err) {
+        console.error(err)
+      }
+    })
+  }
+  writeArticleFile (data, name) {
+    data = this.marked(data)
+    data = JSON.stringify(data)
+    fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
       if (err) {
         console.error(err)
       }
@@ -32,24 +44,26 @@ class NoteBuild {
   buildDataFile () {
     const names = this.rootFileNames()
 
-    this.writeFile(JSON.stringify(names), 'menu_data')
+    this.writeMenuFile(names)
 
     names.forEach(name => {
-      // const name = names[5]
       const dirPath = notePath + '\\' + name
       const filePath = dirPath + '.md'
 
       if (fs.existsSync(filePath)) {
         this.readFile(filePath).then(data => {
           data = this.indexData(data)
-          if (!fs.existsSync(dirPath)) return
+          if (!fs.existsSync(dirPath)) {
+            this.writeArticleFile(data, name)
+            return
+          }
           this.readFileAll(dirPath).then(Alldata => {
-            this.writeFile(data + '\n\n' + Alldata, name)
+            this.writeArticleFile(data + '\n\n' + Alldata, name)
           })
         })
       } else {
         this.readFileAll(dirPath).then(Alldata => {
-          this.writeFile(Alldata, name)
+          this.writeArticleFile(Alldata, name)
         })
       }
     })
@@ -85,8 +99,13 @@ class NoteBuild {
       excu()
     })
   }
+
+  marked (content) {
+    return markeParse(content)
+    // return marked(content)
+  }
 }
 
 (new NoteBuild()).buildDataFile()
 
-module.exports = new NoteBuild()
+// module.exports = new NoteBuild()
