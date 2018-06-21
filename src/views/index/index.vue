@@ -8,19 +8,23 @@
         <a href="http://cqlql.github.io">关于</a>
       </div>
     </div>
-    <div :class="$style.left" :style="{top:top+'px'}">
+    <DragView :class="$style.left" :initialWidth="200" :maxWidth="400" @resize="onResize" :style="{top:top+'px'}">
       <vMenu ref="vMenu" :list="menuList" @select="onMenuSelect" />
-    </div>
-    <div :class="$style.middle" :style="{top:top+'px'}">
+    </DragView>
+    <DragView :class="$style.middle" :initialWidth="200" :maxWidth="400" @resize="onResizeMiddle" :style="{top:top+'px',left:middleX+'px'}">
       <Outline :outlineData="articleOutline" @select="onOutlineSelect" ref="vOutline" />
-    </div>
-    <div :class="$style.right">
+    </DragView>
+    <!-- <div :class="$style.middle" :style="{top:top+'px',left:middleX+'px'}">
+      <Outline :outlineData="articleOutline" @select="onOutlineSelect" ref="vOutline" />
+    </div> -->
+    <div :class="$style.right" :style="{'margin-left':rightX+'px'}">
       <vArticle :content="articleContent" ref="vArticle" @select="onArticleSelect" />
     </div>
   </div>
 </template>
 
 <script>
+import DragView from '@/components/drag-view'
 import dataApi from './data-api.js'
 import vMenu from './Menu'
 import Outline from './Outline'
@@ -42,6 +46,7 @@ const windowScroll = {
 
 export default {
   components: {
+    DragView,
     vMenu,
     Outline,
     vArticle
@@ -51,7 +56,12 @@ export default {
       top: 70,
       menuList: [],
       articleContent: '',
-      articleOutline: {}
+      articleOutline: {},
+
+      // 窗口大小
+      middleX: 200,
+      middleW: 200,
+      rightX: 410
     }
   },
   mounted () {
@@ -82,6 +92,7 @@ export default {
             const vOutline = this.$refs.vOutline
             vOutline.select(index)
             vOutline.unfold(index)
+            this.$refs.vArticle.select(index)
           })
         }
       })
@@ -116,6 +127,14 @@ export default {
           index
         }
       })
+    },
+    onResize (x) {
+      this.middleX = x
+      this.rightX = x + this.middleW + 10
+    },
+    onResizeMiddle (x) {
+      this.middleW = x
+      this.rightX = this.middleX + x + 10
     }
   }
 }
@@ -128,6 +147,7 @@ export default {
   left: 0;
   top: 70px;
   bottom: 0;
+  z-index: 2;
 }
 .middle {
   position: fixed;
@@ -138,6 +158,7 @@ export default {
 }
 .right {
   margin-left: 410px;
+  margin-right: 10px;
 }
 
 .header {

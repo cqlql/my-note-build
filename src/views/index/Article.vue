@@ -26,9 +26,11 @@ export default {
       this.articleSelect.select(hx.parentElement)
     },
     select (index) {
-      const hx = this.hxs[index]
-      window.scrollTo(0, hx.offsetTop - 10)
-      this.highlight(hx)
+      this.$nextTick(() => {
+        const hx = this.hxs[index]
+        window.scrollTo(0, hx.offsetTop - 10)
+        this.highlight(hx)
+      })
     }
   },
   watch: {

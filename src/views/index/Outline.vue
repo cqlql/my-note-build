@@ -11,7 +11,7 @@ export default {
         let { index, level, children, name } = item
         const childList = build(children)
         list.push(
-          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + index} data-index={index}>
+          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + index} data-index={index} data-level={level}>
             <div class={['item', index === selectedIndex && 'selected']}>
               <i class={children.length === 0 ? 'hidden' : ''}></i>
               <span class="txt">{name}</span>
@@ -78,7 +78,24 @@ export default {
     },
     onFoldLevel ({ target }) {
       if (target.tagName === 'A') {
-        this.foldLevel = target.innerHTML
+        let foldLevel = target.innerHTML * 1
+        if (foldLevel === this.foldLevel) {
+          // 不触发更新情况手动折叠
+          const excu = child => {
+            [].forEach.call(child, item => {
+              const level = item.dataset.level
+              if (level < foldLevel) {
+                item.classList.remove('fold')
+              } else {
+                item.classList.add('fold')
+              }
+              excu(item.children[1])
+            })
+          }
+          excu(this.$el.querySelector('.menu-list').children)
+        } else {
+          this.foldLevel = foldLevel
+        }
       }
     },
     select (index) {
