@@ -45,20 +45,20 @@ const prodConfig = {
       },
       done () {
         // 编译后删除
-        // filterRemove(outputPath, /\.(css)$/)
+        filterRemove(outputPath, /^(js)$/)
         // filterRemove(outputPath + '/static', /\.(js|css)$/)
       }
     }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, 'node_modules/vue-router/dist/vue-router.min.js'),
-        to: path.resolve(outputPath, 'js/vue-router.min.js'),
-      }
-    ]),
+    // new CopyWebpackPlugin([
+    //   {
+    //     from: path.resolve(__dirname, 'node_modules/vue-router/dist/vue-router.min.js'),
+    //     to: path.resolve(outputPath, 'js/vue-router.min.js'),
+    //   }
+    // ]),
     // 添加指定的 cdn 包。或者指定路径的包也行
     new ScriptPlugin([
-      'http://p2y63v1s4.bkt.clouddn.com/vue/2.5.13/vue.min.js',
-      'js/vue-router.min.js', // 配合 copy-webpack-plugin 使用
+      'https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js',
+      'https://cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js', // 配合 copy-webpack-plugin 使用
     ])
   ].concat(
     // 打包分析

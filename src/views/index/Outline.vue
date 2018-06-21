@@ -20,7 +20,6 @@ export default {
           </div >
         )
       })
-
       return list
     }
 
@@ -53,6 +52,7 @@ export default {
   watch: {
     outlineData () {
       this.foldLevel = 1
+      this.selectedIndex = -1
     }
   },
   methods: {
@@ -83,6 +83,16 @@ export default {
     },
     select (index) {
       this.selectedIndex = index
+    },
+    unfold (index) {
+      const end = this.$el
+      const items = this.$el.querySelectorAll('.menu-item')
+      let item = items[index]
+      while ((item = item.parentElement)) {
+        if (item === end) break
+        let { classList } = item
+        classList.remove('fold')
+      }
     }
   }
 }

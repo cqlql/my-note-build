@@ -2,9 +2,9 @@ import Index from '@/views/index/index.vue'
 
 export default [
   {
-    path: '/hello',
-    name: 'HelloIndex',
-    meta: {title: 'HelloIndex'},
+    path: '/:type/:index',
+    name: 'Index',
+    meta: {title: '笔记'},
     component: Index
   }
 ]

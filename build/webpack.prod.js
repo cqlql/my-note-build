@@ -20,24 +20,24 @@ module.exports = function (dirname) {
   // })
 
   // vue css 单独处理
-  baseConf.module.rules.forEach(d => {
-    // css 处理
-    if (d.test.toString().indexOf('css') > -1) {
-      // 拆分一般 css
-      d.oneOf[1].oneOf[0].use[0] = MiniCssExtractPlugin.loader
-      d.oneOf[1].oneOf[1].use[0] = MiniCssExtractPlugin.loader
+  // baseConf.module.rules.forEach(d => {
+  //   // css 处理
+  //   if (d.test.toString().indexOf('css') > -1) {
+  //     // 拆分一般 css
+  //     d.oneOf[1].oneOf[0].use[0] = MiniCssExtractPlugin.loader
+  //     d.oneOf[1].oneOf[1].use[0] = MiniCssExtractPlugin.loader
 
-      // 拆分 vue css
-      // d.oneOf[0].oneOf[0].use[0] = MiniCssExtractPlugin.loader
-      // d.oneOf[0].oneOf[1].use[0] = MiniCssExtractPlugin.loader
-    }
-  })
+  //     // 拆分 vue css
+  //     // d.oneOf[0].oneOf[0].use[0] = MiniCssExtractPlugin.loader
+  //     // d.oneOf[0].oneOf[1].use[0] = MiniCssExtractPlugin.loader
+  //   }
+  // })
 
   baseConf.plugins[0] = new HtmlWebpackPlugin({
     filename: './index.html',
     template: './src/index.html',
     // chunks: ['main'],
-    inlineSource: /\.(css)$/,
+    inlineSource: /main\.(js)/,
     minify: {
       removeComments: true,
       collapseWhitespace: true,
@@ -61,29 +61,29 @@ module.exports = function (dirname) {
     // 解决：目前没有好的办法，可以 vue 单独处理不拆分
     // 问题2：会多出一个空的 styles.bundle.js
     // 解决：与入口 mian 同名
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          styles: {
-            name: 'main',
-            test: /\.css$/,
-            chunks: 'all',
-            enforce: true
-          }
-        }
-      }
-    },
+    // optimization: {
+    //   splitChunks: {
+    //     cacheGroups: {
+    //       styles: {
+    //         name: 'main',
+    //         test: /\.css$/,
+    //         chunks: 'all',
+    //         enforce: true
+    //       }
+    //     }
+    //   }
+    // },
     plugins: [
       // css 拆分
-      new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
-        filename: '[name].css',
-        // filename: '[name].[hash].css',
-        // chunkFilename: '[id].[hash].css',
-        // filename: '[name].css?_=[chunkhash:7]',
-        // chunkFilename: '[id].css?_=[chunkhash:7]',
-      }),
+      // new MiniCssExtractPlugin({
+      //   // Options similar to the same options in webpackOptions.output
+      //   // both options are optional
+      //   filename: '[name].css',
+      //   // filename: '[name].[hash].css',
+      //   // chunkFilename: '[id].[hash].css',
+      //   // filename: '[name].css?_=[chunkhash:7]',
+      //   // chunkFilename: '[id].css?_=[chunkhash:7]',
+      // }),
 
       // 优化 css: http://cssnano.co/。
       // 会重写 z-index，造成不正确的现象。。。在弄清楚前暂时不用
