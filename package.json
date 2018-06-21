@@ -1,6 +1,6 @@
 {
-  "name": "webpack-template-vue",
-  "version": "2.4.1",
+  "name": "my-note-build",
+  "version": "1.0.1",
   "description": "",
   "author": "陈桥黎",
   "private": true,

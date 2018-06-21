@@ -4,7 +4,8 @@ const notePath = 'E:\\github\\my-note'
 // const outPath = 'E:\\__admin\\Desktop\\note'
 const outPath = 'E:\\github\\my-note-build\\dist\\data'
 
-// 创建输出目录
+// 删除并创建输出目录
+fs.removeSync(outPath)
 fs.ensureDirSync(outPath)
 
 class NoteBuild {
