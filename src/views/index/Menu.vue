@@ -44,6 +44,8 @@ export default {
 }
 .list {
   list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 .item {
   padding: 8px 10px;
