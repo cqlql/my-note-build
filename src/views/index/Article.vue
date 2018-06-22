@@ -107,6 +107,7 @@ export default {
   .markdown-body pre,
   .markdown-body table,
   .markdown-body ul {
+    margin-left: 0;
     margin-top: 0;
     margin-bottom: 16px;
   }
