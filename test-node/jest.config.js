@@ -1,6 +1,6 @@
 
 module.exports = {
   name: "my-project",
-  testEnvironment: "node",
-  transformIgnorePatterns: ["/"]
+  transform: {},
+  testEnvironment: "node"
 }

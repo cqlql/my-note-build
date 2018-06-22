@@ -1,8 +1,0 @@
-const noteBuild = require('../server/note-build');
-
-// console.log(noteBuild.typeNames())
-console.log(noteBuild.typeData())
-
-test('adds 1 + 2 to equal 3', () => {
-  expect(1 + 2).toBe(3);
-});
