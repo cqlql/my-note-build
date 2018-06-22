@@ -14,11 +14,13 @@ class NoteBuild {
     let names = {}
     fs.readdirSync(notePath).forEach(name => {
       if (/^(.git|.editorconfig)$/.test(name) === false) {
-        name = name.replace(/\.md$/, '')
-        names[name] = 1
+        let no = name.match(/\d\d_/)
+        no = no === null ? '' : no[0]
+        name = name.replace(/\.md$|^\d\d_/g, '')
+        names[name] = no
       }
     })
-    return Object.keys(names)
+    return names
   }
   indexData (data) {
     return data.replace(/#(#+)/g, '$1')
@@ -35,7 +37,7 @@ class NoteBuild {
   }
   writeArticleFile (data, name) {
     data = this.marked(data)
-    data.outline.name = name
+    data.outline.name = name // 大纲类型名称
     data = JSON.stringify(data)
     fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
       if (err) {
@@ -45,11 +47,13 @@ class NoteBuild {
   }
   buildDataFile () {
     const names = this.rootFileNames()
+    const namesKeys = Object.keys(names)
 
-    this.writeMenuFile(names)
+    this.writeMenuFile(namesKeys)
 
-    names.forEach(name => {
-      const dirPath = notePath + '\\' + name
+    namesKeys.forEach(name => {
+      const no = names[name]
+      const dirPath = notePath + '\\' + no + name
       const filePath = dirPath + '.md'
 
       if (fs.existsSync(filePath)) {
