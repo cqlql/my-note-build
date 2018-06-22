@@ -19,7 +19,6 @@ router.beforeEach((to, from, next) => {
     })
   } else {
     loading.show()
-    document.title = to.meta.title || ''
     next()
   }
 })

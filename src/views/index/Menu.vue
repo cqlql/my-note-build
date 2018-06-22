@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import dataApi from './data-api.js'
 export default {
   props: {
     list: Array
@@ -23,6 +24,10 @@ export default {
     onSelect ({target}) {
       let index = target.dataset.index
       if (index) {
+        if (dataApi.ctrlKeyDown) {
+          window.open(`/#/${index}/-1`)
+          return false
+        }
         index *= 1
         if (this.selectedIndex !== index) {
           this.select(index)
@@ -32,10 +37,21 @@ export default {
     },
     scrollTo (index) {
       this.select(index)
-      this.$nextTick(() => {
+      setTimeout(() => {
         let {$el} = this
-        $el.scrollTop = index * 32 - $el.clientHeight / 2 - 16
-      })
+        $el.scrollTop = index * 32 - $el.clientHeight / 2 + 16
+      }, 1)
+    },
+    updateTitle () {
+      document.title = '笔记-' + this.list[this.selectedIndex]
+    }
+  },
+  watch: {
+    list () {
+      this.updateTitle()
+    },
+    selectedIndex () {
+      this.updateTitle()
     }
   }
 }

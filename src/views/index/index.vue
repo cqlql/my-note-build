@@ -61,7 +61,9 @@ export default {
       // 窗口大小
       middleX: 200,
       middleW: 200,
-      rightX: 410
+      rightX: 410,
+
+      ctrlKeyDown: false
     }
   },
   mounted () {
@@ -69,27 +71,21 @@ export default {
     windowScroll.bind(top => {
       this.top = top
     })
-
-    // windowCtrlKey()
-
-    // window.addEventListener('keydown', ({keyCode}) => {
-    //   console.log(keyCode)
-    // })
+    dataApi.ctrlKeyBind()
   },
   destroyed () {
     windowScroll.unbind()
+    dataApi.ctrlKeyUnbind()
   },
   methods: {
     init () {
-      let {type, index} = this.$route.params
+      let { type, index } = this.$route.params
       type *= 1
       index *= 1
       if (type < 0) type = 0
       dataApi.getMenu().then(data => {
         this.menuList = data
-        const vMenu = this.$refs.vMenu
-        // vMenu.select(type)
-        vMenu.scrollTo(type)
+        this.$refs.vMenu.scrollTo(type)
         return dataApi.getArticle(data[type])
       }).then(({ content, outline }) => {
         this.articleContent = content
@@ -98,9 +94,7 @@ export default {
         if (index > -1) {
           this.$nextTick(() => {
             this.$refs.vOutline.scrollTo(index)
-            // const vArticle = this.$refs.vArticle
             this.$refs.vArticle.select(index)
-            // vArticle.scrollToY(index)
           })
         }
       })
@@ -114,17 +108,14 @@ export default {
       })
     },
     onOutlineSelect (index) {
-      this.$refs.vArticle.select(index)
       this.updateRouter(null, index)
     },
     onArticleSelect (index) {
-      const vOutline = this.$refs.vOutline
-      vOutline.select(index)
-      vOutline.unfold(index)
+      this.$refs.vOutline.scrollTo(index)
       this.updateRouter(null, index)
     },
     updateRouter (type, index) {
-      const {params} = this.$route
+      const { params } = this.$route
       type = type === null ? params.type : type
       index = index === null ? params.index : index
 
