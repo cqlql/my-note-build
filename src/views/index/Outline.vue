@@ -1,6 +1,7 @@
 
 <script>
 import scopeElements from '@/modules/corejs/dom/scope-elements.js'
+import relativexy from '@/modules/corejs/dom/relativexy.js'
 export default {
   render () {
     const { outlineData, foldLevel, selectedIndex } = this
@@ -53,9 +54,20 @@ export default {
     outlineData () {
       this.foldLevel = 1
       this.selectedIndex = -1
+      this.eItems = null
     }
   },
+  mounted () {
+    this.eMenuList = this.$el.querySelector('.menu-list')
+  },
   methods: {
+    getItems () {
+      let {eItems} = this
+      if (!eItems) {
+        eItems = this.eItems = this.eMenuList.querySelectorAll('.menu-item')
+      }
+      return eItems
+    },
     onFold ({ target }) {
       const end = this.$el
       scopeElements(target, elem => {
@@ -103,13 +115,23 @@ export default {
     },
     unfold (index) {
       const end = this.$el
-      const items = this.$el.querySelectorAll('.menu-item')
+      const items = this.getItems()
       let item = items[index]
+      console.log(item)
       while ((item = item.parentElement)) {
         if (item === end) break
         let { classList } = item
         classList.remove('fold')
       }
+    },
+    scrollTo (index) {
+      this.select(index)
+      this.unfold(index)
+      this.$nextTick(() => {
+        const {eMenuList} = this
+        const item = this.getItems()[index]
+        eMenuList.scrollTop = relativexy(item, eMenuList).y - eMenuList.clientHeight / 2 - 13
+      })
     }
   }
 }

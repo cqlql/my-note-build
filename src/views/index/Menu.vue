@@ -29,6 +29,13 @@ export default {
           this.$emit('select', index)
         }
       }
+    },
+    scrollTo (index) {
+      this.select(index)
+      this.$nextTick(() => {
+        let {$el} = this
+        $el.scrollTop = index * 32 - $el.clientHeight / 2 - 16
+      })
     }
   }
 }

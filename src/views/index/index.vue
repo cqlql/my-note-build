@@ -69,6 +69,12 @@ export default {
     windowScroll.bind(top => {
       this.top = top
     })
+
+    // windowCtrlKey()
+
+    // window.addEventListener('keydown', ({keyCode}) => {
+    //   console.log(keyCode)
+    // })
   },
   destroyed () {
     windowScroll.unbind()
@@ -81,7 +87,9 @@ export default {
       if (type < 0) type = 0
       dataApi.getMenu().then(data => {
         this.menuList = data
-        this.$refs.vMenu.select(type)
+        const vMenu = this.$refs.vMenu
+        // vMenu.select(type)
+        vMenu.scrollTo(type)
         return dataApi.getArticle(data[type])
       }).then(({ content, outline }) => {
         this.articleContent = content
@@ -89,10 +97,10 @@ export default {
         // 初始定位文章
         if (index > -1) {
           this.$nextTick(() => {
-            const vOutline = this.$refs.vOutline
-            vOutline.select(index)
-            vOutline.unfold(index)
+            this.$refs.vOutline.scrollTo(index)
+            // const vArticle = this.$refs.vArticle
             this.$refs.vArticle.select(index)
+            // vArticle.scrollToY(index)
           })
         }
       })
