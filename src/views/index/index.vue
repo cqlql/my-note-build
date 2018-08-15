@@ -108,6 +108,7 @@ export default {
       })
     },
     onOutlineSelect (index) {
+      this.$refs.vArticle.select(index)
       this.updateRouter(null, index)
     },
     onArticleSelect (index) {
