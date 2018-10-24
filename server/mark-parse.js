@@ -10,6 +10,7 @@ const minify = require('html-minifier').minify
 highlight.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
 highlight.registerLanguage('css', require('highlight.js/lib/languages/css'))
 highlight.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
+highlight.registerLanguage('typescript', require('highlight.js/lib/languages/typescript'))
 
 const renderer = new marked.Renderer()
 let hIndex = 0

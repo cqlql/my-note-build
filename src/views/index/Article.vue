@@ -5,7 +5,9 @@
 </template>
 
 <script>
+import 'highlight.js/styles/xcode.css'
 import DomSelect from './dom-select.js'
+
 export default {
   props: {
     content: String
@@ -543,7 +545,7 @@ export default {
     background-color: #ffc;
   }
 
-  .hljs {
+/*   .hljs {
     display: block;
     background: #fff;
     padding: 0.5em;
@@ -608,6 +610,6 @@ export default {
 
   .hljs-link {
     text-decoration: underline;
-  }
+  } */
 }
 </style>
