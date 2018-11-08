@@ -16,7 +16,7 @@ export default {
           <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + index} data-index={index} data-level={level}>
             <div class={['item', index === selectedIndex && 'selected']}>
               <i class={children.length === 0 ? 'hidden' : ''}></i>
-              <span class="txt">{name}</span>
+              <span class="txt" domPropsInnerHTML={name}></span>
             </div>
             <div class="list">{childList}</div>
           </div >
