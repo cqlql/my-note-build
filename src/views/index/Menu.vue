@@ -25,7 +25,7 @@ export default {
       let index = target.dataset.index
       if (index) {
         if (dataApi.ctrlKeyDown) {
-          window.open(`${location.origin + location.pathname}/#/${index}/-1`)
+          window.open(`${location.origin + location.pathname}#/${index}/-1`)
           return false
         }
         index *= 1
