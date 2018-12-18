@@ -17,6 +17,7 @@ export default {
     this.articleSelect = new DomSelect()
   },
   mounted () {
+    // 文章定位优化
     this.$el.children[0].style.paddingBottom = innerHeight + 'px'
   },
   methods: {
