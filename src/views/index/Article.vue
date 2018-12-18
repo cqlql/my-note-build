@@ -16,6 +16,9 @@ export default {
     this.hxSelect = new DomSelect()
     this.articleSelect = new DomSelect()
   },
+  mounted () {
+    this.$el.children[0].style.paddingBottom = innerHeight + 'px'
+  },
   methods: {
     onSelect ({ target }) {
       if (/H\d/.test(target.tagName)) {
