@@ -76,7 +76,7 @@ export default {
         let { classList } = elem
         if (classList.contains('menu-item')) {
           if (dataApi.ctrlKeyDown) {
-            window.open(`/#/${this.$route.params.type}/${elem.dataset.index}`)
+            window.open(`${location.origin + location.pathname}#/${this.$route.params.type}/${elem.dataset.index}`)
             return false
           }
           if (classList.contains('fold')) {
