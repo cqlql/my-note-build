@@ -9,7 +9,7 @@ fs.removeSync(outPath)
 fs.ensureDirSync(outPath)
 
 class NoteBuild {
-  // 跟目录下的所有文件，包括目录
+  // 根目录下的所有文件，包括目录
   rootFileNames () {
     let names = {}
     fs.readdirSync(notePath).forEach(name => {
