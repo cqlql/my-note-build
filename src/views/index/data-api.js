@@ -42,7 +42,7 @@ const dataApi = {
         Vue.loading.hide()
         resolve(data)
       }
-      scriptLoad(`./data/${name}.js`)
+      scriptLoad(`./data/${encodeURIComponent(name)}.js`)
     })
   },
   ctrlKeyBind: windowCtrlKey.bind,
