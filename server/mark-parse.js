@@ -1,16 +1,20 @@
-// import marked from 'marked'
-// import highlight from 'highlight.js/lib/highlight.js'
 const marked = require('marked')
-const highlight = require('highlight.js/lib/highlight.js')
 const BuildOutlint = require('./build-outline')
 const minify = require('html-minifier').minify
 
 // 代码高亮
-// const highlight = require('highlight.js/lib/highlight.js')
-highlight.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
-highlight.registerLanguage('css', require('highlight.js/lib/languages/css'))
-highlight.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
-highlight.registerLanguage('typescript', require('highlight.js/lib/languages/typescript'))
+// 所有语言
+// const highlight = require('highlight.js')
+// 指定语言
+const hljs = require('highlight.js/lib/highlight.js')
+hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
+hljs.registerLanguage('css', require('highlight.js/lib/languages/css'))
+hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
+hljs.registerLanguage('typescript', require('highlight.js/lib/languages/typescript'))
+hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'))
+hljs.registerLanguage('dos', require('highlight.js/lib/languages/dos'))
+hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'))
+hljs.registerLanguage('shell', require('highlight.js/lib/languages/shell'))
 
 const renderer = new marked.Renderer()
 let hIndex = 0
@@ -40,7 +44,7 @@ renderer.heading = function (text, level) {
 marked.setOptions({
   renderer,
   highlight: function (code) {
-    return highlight.highlightAuto(code).value
+    return hljs.highlightAuto(code).value
   }
 })
 
