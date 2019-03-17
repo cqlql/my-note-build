@@ -58,7 +58,9 @@ export default {
     line-height: 1.5;
     word-wrap: break-word;
   }
-
+  .markdown-body strong {
+    color: #d00;
+  }
   .markdown-body a {
     color: #0366d6;
     text-decoration: none;
