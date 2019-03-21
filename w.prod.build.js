@@ -15,7 +15,8 @@ const isTest = argv['test'] === true // 有时候可能需要测试编译结果
 const webpackConfig = getWebpackConfig(__dirname)
 
 // 打包输出路径设置：
-let outputPath = path.resolve(__dirname, './dist')
+// let outputPath = path.resolve(__dirname, './dist')
+let outputPath = 'E:\\github\\my-note-build\\dist'
 if (isTest) {
   // outputPath = path.resolve(__dirname, './dist')
 }

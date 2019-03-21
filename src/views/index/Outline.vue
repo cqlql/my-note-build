@@ -37,7 +37,7 @@ export default {
             <a href="javascript:;" class="level">4</a>
           </div>
         </div>
-        <div class="menu-list" onClick={this.onFold}>{menuList}</div>
+        <div class="menu-list" onClick={this.onFold} onDblclick={this.onDbFold}>{menuList}</div>
       </div>
     )
   },
@@ -71,24 +71,43 @@ export default {
     },
     onFold ({ target }) {
       const end = this.$el
+      let eArrows
       scopeElements(target, elem => {
         if (elem === end) return false
+        if (elem.tagName === 'I') {
+          eArrows = elem
+        }
         let { classList } = elem
         if (classList.contains('menu-item')) {
           if (dataApi.ctrlKeyDown) {
             window.open(`${location.origin + location.pathname}#/${this.$route.params.type}/${elem.dataset.index}`)
             return false
           }
-          if (classList.contains('fold')) {
-            classList.remove('fold')
+          if (eArrows) {
+            if (classList.contains('fold')) {
+              classList.remove('fold')
+            } else {
+              classList.add('fold')
+            }
           } else {
-            classList.add('fold')
+            classList.remove('fold')
           }
           let index = elem.dataset.index * 1
           if (index !== this.selectedIndex) {
             this.select(index)
             this.$emit('select', index)
           }
+          return false
+        }
+      })
+    },
+    onDbFold ({ target }) {
+      const end = this.$el
+      scopeElements(target, elem => {
+        if (elem === end) return false
+        let { classList } = elem
+        if (classList.contains('menu-item')) {
+          classList.add('fold')
           return false
         }
       })
