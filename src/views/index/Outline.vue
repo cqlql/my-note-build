@@ -7,14 +7,16 @@ export default {
   render () {
     const { outlineData, foldLevel, selectedIndex } = this
     const rootName = outlineData.name
+    let index = 0
     function build (children = []) {
       const list = []
       children.forEach(item => {
-        let { index, level, children, name } = item
+        let { level, children, name } = item
+        let currIndex = index++
         const childList = build(children)
         list.push(
-          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + index} data-index={index} data-level={level}>
-            <div class={['item', index === selectedIndex && 'selected']}>
+          <div class={['menu-item', level < foldLevel ? '' : 'fold']} key={rootName + currIndex} data-index={currIndex} data-level={level}>
+            <div class={['item', currIndex === selectedIndex && 'selected']}>
               <i class={children.length === 0 ? 'hidden' : ''}></i>
               <span class="txt" domPropsInnerHTML={name}></span>
             </div>
