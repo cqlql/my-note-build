@@ -6,8 +6,29 @@
   <!-- <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/> -->
   <!-- <meta name="format-detection" content="telephone=no"> -->
   <title>笔记</title>
+  <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script>
+
 </head>
 <body>
 <div id="app"></div>
+<script>
+var client = algoliasearch('0LB88A3X11', 'e6cbdb5d4cc789a9007808e09db844a2');
+var index = client.initIndex('docs');
+// index.setSettings({
+//   'customRanking': ['desc(followers)']
+// }, function(err, content) {
+//   if (err) throw err;
+//   console.log(content);
+// });
+index.search("数组", {
+ "hitsPerPage": 10,
+ "page": 0,
+ "analytics": false,
+ "attributesToRetrieve": "*",
+ "getRankingInfo": true,
+ "responseFields": "*",
+ "facets": "*,"
+});
+</script>
 </body>
 </html>
