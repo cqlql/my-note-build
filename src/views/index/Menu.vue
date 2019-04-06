@@ -34,9 +34,11 @@ export default {
           return false
         }
         index *= 1
-        if (this.selectedIndex !== index) {
-          this.select(index)
+        if (id) {
           this.$emit('select', {index, id})
+        } else if (this.selectedIndex !== index) {
+          this.select(index)
+          this.$emit('select', {index})
         }
       }
     },
