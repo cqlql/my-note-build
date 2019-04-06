@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.typeMenu">
+    <VSearch />
     <ul :class="$style.list" @click="onSelect">
       <li v-for="(name,index) of list" :class="[$style.item,index===selectedIndex&&$style.selected]" :key="name" :data-index="index">{{name}}</li>
     </ul>
@@ -7,8 +8,12 @@
 </template>
 
 <script>
+import VSearch from '@/views/index/VSearch.vue'
 import dataApi from './data-api.js'
 export default {
+  components: {
+    VSearch
+  },
   props: {
     list: Array
   },

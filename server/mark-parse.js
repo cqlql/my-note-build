@@ -47,10 +47,15 @@ module.exports = class MarkeParse {
         return hljs.highlightAuto(code).value
       }
     })
+
+    this.indexs = []
   }
-  parser (content) {
+  parser (content, name) {
     let buildOutlint = this.buildOutlint = BuildOutlint()
-    content = marked(content)
+    const tokens = marked.lexer(content, name)
+    this.buildSearchIndexs(tokens, name)
+    content = marked.parser(tokens)
+    // content = marked(content)
     content = content + (new Array(this.hxNum + 1)).join('</section>')
     content = minify(content, {
       removeComments: true,
@@ -63,5 +68,30 @@ module.exports = class MarkeParse {
       outline: buildOutlint.getData(),
       content
     }
+  }
+  buildSearchIndexs (tokens, name) {
+    let indexs = this.indexs
+    let item = {
+      name,
+      outlinePath: '',
+      content: ''
+    }
+    let path = []
+    let preDepth = 0
+    tokens.forEach(({ type, depth, text }) => {
+      if (type === 'heading') {
+        let length = path.length = path.length - 1 - preDepth + depth
+        path[length] = text
+        item = {
+          name,
+          outlinePath: JSON.stringify(path),
+          content: ''
+        }
+        indexs.push(item)
+        preDepth = depth
+      } else if (text) {
+        item.content += text + '\r\n'
+      }
+    })
   }
 }

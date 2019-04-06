@@ -10,6 +10,8 @@ class NoteBuild {
     fs.removeSync(outPath)
     fs.ensureDirSync(outPath)
 
+    this.searchIndexsCount = 0
+
     this.markeParse = new MarkeParse()
   }
   // 根目录下的所有文件，包括目录
@@ -32,48 +34,51 @@ class NoteBuild {
   writeMenuFile (data) {
     const name = 'menu_data'
     data = JSON.stringify(data)
-    fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
+    fs.writeFile(`${outPath}/${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
       if (err) {
         console.error(err)
       }
     })
   }
   writeArticleFile (data, name) {
-    data = this.marked(data)
+    data = this.marked(data, name)
     data.outline.name = name // 大纲类型名称
     data = JSON.stringify(data)
-    fs.writeFile(`${outPath}\\${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
+    fs.writeFile(`${outPath}/${name}.js`, `window['cb_${name}'](${data})`, 'utf8', function (err) {
       if (err) {
         console.error(err)
       }
     })
   }
-  buildDataFile () {
+  async buildDataFile () {
     const names = this.rootFileNames()
     const namesKeys = Object.keys(names)
 
     this.writeMenuFile(namesKeys)
 
-    namesKeys.forEach(name => {
+    for (let i = 0, len = namesKeys.length; i < len; i++) {
+      let name = namesKeys[i]
       const no = names[name]
       const dirPath = notePath + '\\' + no + name
       const filePath = dirPath + '.md'
 
       if (fs.existsSync(filePath)) {
-        this.readFile(filePath).then(data => {
-          data = this.indexData(data)
-          if (!fs.existsSync(dirPath)) {
-            this.writeArticleFile(data, name)
-            return
-          }
-          this.readFileAll(dirPath).then(Alldata => {
-            this.writeArticleFile(data + '\n\n' + Alldata, name)
-          })
-        })
+        let data = await this.readFile(filePath)
+        data = this.indexData(data)
+        if (!fs.existsSync(dirPath)) {
+          this.writeArticleFile(data, name)
+          continue
+        }
+        let Alldata = await this.readFileAll(dirPath)
+        this.writeArticleFile(data + '\n\n' + Alldata, name)
       } else {
-        this.readFileAll(dirPath).then(Alldata => {
-          this.writeArticleFile(Alldata, name)
-        })
+        let Alldata = await this.readFileAll(dirPath)
+        this.writeArticleFile(Alldata, name)
+      }
+    }
+    fs.writeFile(`${outPath}/search-indexs.json`, JSON.stringify(this.markeParse.indexs), 'utf8', function (err) {
+      if (err) {
+        console.error(err)
       }
     })
   }
@@ -109,9 +114,8 @@ class NoteBuild {
     })
   }
 
-  marked (content) {
-    return this.markeParse.parser(content)
-    // return marked(content)
+  marked (content, name) {
+    return this.markeParse.parser(content, name)
   }
 }
 
