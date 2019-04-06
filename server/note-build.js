@@ -1,14 +1,17 @@
 const fs = require('fs-extra')
-const markeParse = require('./mark-parse')
+const MarkeParse = require('./mark-parse')
 const notePath = 'E:\\github\\my-note'
 // const outPath = 'E:\\__admin\\Desktop\\note'
 const outPath = 'E:\\github\\my-note-build\\dist\\data'
 
-// 删除并创建输出目录
-fs.removeSync(outPath)
-fs.ensureDirSync(outPath)
-
 class NoteBuild {
+  constructor () {
+    // 删除并创建输出目录
+    fs.removeSync(outPath)
+    fs.ensureDirSync(outPath)
+
+    this.markeParse = new MarkeParse()
+  }
   // 根目录下的所有文件，包括目录
   rootFileNames () {
     let names = {}
@@ -107,7 +110,7 @@ class NoteBuild {
   }
 
   marked (content) {
-    return markeParse(content)
+    return this.markeParse.parser(content)
     // return marked(content)
   }
 }
