@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.typeMenu">
-    <VSearch />
+    <VSearch @select="searchSelect"/>
     <ul :class="$style.list" @click="onSelect">
-      <li v-for="(name,index) of list" :class="[$style.item,index===selectedIndex&&$style.selected]" :key="name" :data-index="index">{{name}}</li>
+      <li v-for="(name,index) of list" :class="[$style.item,index===selectedIndex&&$style.selected]" :key="name" :id="name" :data-index="index">{{name}}</li>
     </ul>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
     select (index) {
       this.selectedIndex = index
     },
-    onSelect ({target}) {
+    onSelect ({target}, id) {
       let index = target.dataset.index
       if (index) {
         if (dataApi.ctrlKeyDown) {
@@ -36,7 +36,7 @@ export default {
         index *= 1
         if (this.selectedIndex !== index) {
           this.select(index)
-          this.$emit('select', index)
+          this.$emit('select', {index, id})
         }
       }
     },
@@ -49,6 +49,9 @@ export default {
     },
     updateTitle () {
       document.title = '笔记-' + this.list[this.selectedIndex]
+    },
+    searchSelect ({name, path}) {
+      this.onSelect({ target: document.getElementById(name) }, path)
     }
   },
   watch: {

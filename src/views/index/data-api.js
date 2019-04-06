@@ -45,6 +45,22 @@ const dataApi = {
       scriptLoad(`./data/${encodeURIComponent(name)}.js`)
     })
   },
+  search (wd, page) {
+    return new Promise((resolve, reject) => {
+      window.index.search(wd, {
+        'hitsPerPage': 10,
+        page,
+        'analytics': false,
+        'attributesToRetrieve': '*',
+        'getRankingInfo': true,
+        'responseFields': '*',
+        'facets': '*,'
+      }, (err, content) => {
+        if (err) reject(err)
+        else resolve(content.hits)
+      })
+    })
+  },
   ctrlKeyBind: windowCtrlKey.bind,
   ctrlKeyUnbind: windowCtrlKey.unbind
 }

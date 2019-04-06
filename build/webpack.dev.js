@@ -25,7 +25,8 @@ module.exports = function (dirname) {
     ],
     devServer: {
       clientLogLevel: 'warning',// 去掉没必要的控制台输出。比如 hot 情况 --progress 浏览器控制台不再显示进度输出
-      contentBase: path.resolve(dirname, 'dist'),
+      // contentBase: path.resolve(dirname, 'dist'),
+      contentBase: 'E:\\github\\my-note-build\\dist',
       compress: true,
       host: getIPAdress(),
       // port: 3002,

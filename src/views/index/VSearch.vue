@@ -3,9 +3,12 @@
     <input ref="eIpt" v-model.trim="wd" type="text" placeholder="搜索" @blur="blur" @focus="focus">
     <div v-show="show" :class="$style.result" @mousedown="$event.preventDefault()">
       <table>
-        <tr v-for="item of searchResult" :key="item.path" @click="select(item.path)">
+        <tr v-for="item of searchResult" :key="item.id" @click="select(item)">
           <th>{{ item.name }}</th>
-          <td><pre v-html="item.content" /></td>
+          <td>
+            <div :class="$style.tit" v-html="JSON.parse(item.highlightPath).join('/')"></div>
+            <pre v-html="item.content" />
+          </td>
         </tr>
       </table>
       <div v-show="noData" :class="$style.noData">- 找不到结果 -</div>
@@ -86,16 +89,22 @@ export default {
         this.show = true
       }
     },
-    select (path) {
-      this.$emit('select', path)
+    select (d) {
+      this.$emit('select', d)
       this.$refs.eIpt.blur()
     },
     async load ({ complete, page }) {
       let searchResult = []
       try {
         searchResult = await dataApi.search(this.wd.replace(/\s+/g, ' '), page)
-        searchResult.forEach(d => {
-          d.content = this.capture(d.path, d.content)
+        searchResult = searchResult.map(d => {
+          return {
+            id: d.objectID,
+            name: d.name,
+            path: d.outline,
+            highlightPath: d._highlightResult.outline.value,
+            content: d._highlightResult.content.value
+          }
         })
         if (page === 0) {
           this.searchResult = searchResult
@@ -168,17 +177,24 @@ export default {
   tr:hover td {
     background-color: #f9ffde;
   }
+
+  .tit {
+    font-weight: bold;
+    padding: 2px 0 8px;
+    /* font-size: 14px; */
+  }
   pre {
     margin: 0;
     color:#333;font:14px/1.2 "Microsoft Yahei",Consolas;
     word-wrap: break-word;
     word-break: break-all;
     white-space: pre-wrap;
-    b {
-      background: #ffe564;
-    }
+  }
+  em {
+    background: #ffe564;
   }
 }
+
 .noData {
   text-align: center;
   padding: 20px 0 2px;

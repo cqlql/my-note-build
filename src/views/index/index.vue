@@ -99,12 +99,19 @@ export default {
         }
       })
     },
-    onMenuSelect (index) {
-      this.updateRouter(index, -1)
+    onMenuSelect ({index, id}) {
+      if (!id) this.updateRouter(index, -1)
       window.scrollTo(0, 0)
       dataApi.getArticle(this.menuList[index]).then(({ content, outline }) => {
         this.articleContent = content
         this.articleOutline = outline
+        if (id) {
+          this.$nextTick(() => {
+            let i = document.getElementById(id).dataset.index * 1
+            this.$refs.vArticle.select(i)
+            this.$refs.vOutline.scrollTo(i)
+          })
+        }
       })
     },
     onOutlineSelect (index) {

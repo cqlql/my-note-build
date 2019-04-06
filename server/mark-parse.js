@@ -19,25 +19,33 @@ module.exports = class MarkeParse {
     hljs.registerLanguage('shell', require('highlight.js/lib/languages/shell'))
 
     const renderer = new marked.Renderer()
-    let hIndex = 0
-    let pre = 0
-    let hxNum = this.hxNum = 0
-    renderer.heading = (text, level) => {
-      this.buildOutlint.build(text, level)
+    // let hIndex = 0
+    // let pre = 0
+    // let hxNum = this.hxNum = 0
+    renderer.heading = (text, depth) => {
+      this.buildOutlint.build(text, depth)
+      let id = this.id
+      let pre = this.pre
+      let hIndex = this.hIndex
+      let hxNum = this.hxNum
+      let length = id.length = id.length - 1 - pre + depth
+      id[length] = text
       let hx = ''
-      if (level === pre) {
+      if (depth === pre) {
         hx = '</section>'
-      } else if (level < pre) {
-        hx = (new Array(hxNum - level + 2)).join('</section>')
-        hxNum = level - 1
+      } else if (depth < pre) {
+        hx = (new Array(hxNum - depth + 2)).join('</section>')
+        hxNum = depth - 1
       }
-      hx = `${hx}<section><h${level} id="${text.replace(/<[^>]+>/g, '')}" data-index="${hIndex}">${text}</h${level}>`
+      // hx = `${hx}<section><h${depth} id="${text.replace(/<[^>]+>/g, '')}" data-index="${hIndex}">${text}</h${depth}>`
+      hx = `${hx}<section><h${depth} id='${JSON.stringify(id)}' data-index="${hIndex}">${text}</h${depth}>`
       hIndex++
-      if (level !== pre) {
+      if (depth !== pre) {
         hxNum++
       }
-      pre = level
+      this.pre = depth
       this.hxNum = hxNum
+      this.hIndex = hIndex
       return hx
     }
 
@@ -52,10 +60,14 @@ module.exports = class MarkeParse {
   }
   parser (content, name) {
     let buildOutlint = this.buildOutlint = BuildOutlint()
-    const tokens = marked.lexer(content, name)
+    this.id = []
+    this.pre = 0
+    this.hxNum = 0
+    this.hIndex = 0
+    const tokens = marked.lexer(content)
     this.buildSearchIndexs(tokens, name)
     content = marked.parser(tokens)
-    // content = marked(content)
+    content = marked(content)
     content = content + (new Array(this.hxNum + 1)).join('</section>')
     content = minify(content, {
       removeComments: true,
@@ -73,7 +85,7 @@ module.exports = class MarkeParse {
     let indexs = this.indexs
     let item = {
       name,
-      outlinePath: '',
+      outline: '',
       content: ''
     }
     let path = []
@@ -84,7 +96,7 @@ module.exports = class MarkeParse {
         path[length] = text
         item = {
           name,
-          outlinePath: JSON.stringify(path),
+          outline: JSON.stringify(path),
           content: ''
         }
         indexs.push(item)
