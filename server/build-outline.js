@@ -26,7 +26,7 @@ function BuildOutlint () {
   let currItem = rootItem
   let currLevel = startLevel
 
-  let index = 0
+  // let index = 0
 
   return {
     getData () {
@@ -41,7 +41,7 @@ function BuildOutlint () {
 
         for (let i = 0, len = breakLevel - 1; i < len; i++) {
           let item = {
-            'index': -1,
+            // 'index': -1,
             'children': []
           }
 
@@ -61,7 +61,7 @@ function BuildOutlint () {
       }
 
       let item = {
-        index,
+        // index,
         level,
         // "name":hx.textContent,
         'name': text,
@@ -74,7 +74,7 @@ function BuildOutlint () {
 
       currLevel = level
 
-      index++
+      // index++
     }
   }
 }
