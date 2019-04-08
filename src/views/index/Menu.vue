@@ -34,11 +34,9 @@ export default {
           return false
         }
         index *= 1
-        if (id) {
-          this.$emit('select', {index, id})
-        } else if (this.selectedIndex !== index) {
+        if (this.selectedIndex !== index || id) {
           this.select(index)
-          this.$emit('select', {index})
+          this.$emit('select', {index, id})
         }
       }
     },

@@ -105,11 +105,14 @@ export default {
       dataApi.getArticle(this.menuList[index]).then(({ content, outline }) => {
         this.articleContent = content
         this.articleOutline = outline
+        // 搜索情况跳转
         if (id) {
           this.$nextTick(() => {
             let i = document.getElementById(id).dataset.index * 1
             this.$refs.vArticle.select(i)
             this.$refs.vOutline.scrollTo(i)
+            this.$refs.vMenu.scrollTo(index)
+            this.updateRouter(index, i)
           })
         }
       })
