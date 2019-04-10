@@ -64,10 +64,11 @@ module.exports = class MarkeParse {
     this.pre = 0
     this.hxNum = 0
     this.hIndex = 0
+
     const tokens = marked.lexer(content)
     this.buildSearchIndexs(tokens, name)
     content = marked.parser(tokens)
-    content = marked(content)
+
     content = content + (new Array(this.hxNum + 1)).join('</section>')
     content = minify(content, {
       removeComments: true,
