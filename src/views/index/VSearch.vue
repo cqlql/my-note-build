@@ -93,6 +93,7 @@ export default {
     focus () {
       if (this.wd) {
         this.show = true
+        this.$nextTick(() => { this.resize() })
       }
     },
     select (d) {
@@ -100,6 +101,7 @@ export default {
       this.$refs.eIpt.blur()
     },
     async load ({ complete, page }) {
+      this.$nextTick(() => { this.resize() })
       let searchResult = []
       try {
         searchResult = await dataApi.search(this.wd.replace(/\s+/g, ' '), page)
@@ -126,10 +128,10 @@ export default {
         this.$refs.vScrollBottomLoadPage.hide()
       }
       complete(noNextPage)
-      await this.$nextTick()
-      this.resize()
+      this.$nextTick(() => { this.resize() })
     },
     resize () {
+      if (!this.show) return
       let {eResult, eAlgoliaLogo} = this.$refs
       let style = eAlgoliaLogo.style
       style.top = eResult.offsetHeight + eResult.offsetTop + 'px'
