@@ -13,6 +13,7 @@
     "data-mock": "node ./data-mock/server.run.js"
   },
   "dependencies": {
+    "algoliasearch": "^3.32.1",
     "highlight.js": "^9.13.1",
     "marked": "^0.4.0",
     "vue": "^2.5.16",

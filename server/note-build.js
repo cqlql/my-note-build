@@ -1,5 +1,6 @@
 const fs = require('fs-extra')
 const MarkeParse = require('./mark-parse')
+const algoliasearch = require('algoliasearch');
 const notePath = 'E:\\github\\my-note'
 // const outPath = 'E:\\__admin\\Desktop\\note'
 const outPath = 'E:\\github\\my-note-build\\dist\\data'
@@ -76,10 +77,21 @@ class NoteBuild {
         this.writeArticleFile(Alldata, name)
       }
     }
-    fs.writeFile(`${outPath}/search-indexs.json`, JSON.stringify(this.markeParse.indexs), 'utf8', function (err) {
+    let indexsJSON = this.markeParse.indexs
+    fs.writeFile(`${outPath}/search-indexs.json`, JSON.stringify(indexsJSON), 'utf8', function (err) {
       if (err) {
         console.error(err)
+        return
       }
+      // 上传索引
+      const client = algoliasearch('0LB88A3X11', 'e6cbdb5d4cc789a9007808e09db844a2');
+      const index = client.initIndex('docs')
+      index.clearIndex((err, content) => {
+        if (err) throw err
+        index.addObjects(indexsJSON, (err, content) => {
+          if (err) throw err
+        })
+      })
     })
   }
   readFile (filePath) {
