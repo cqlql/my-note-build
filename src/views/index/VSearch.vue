@@ -133,7 +133,7 @@ export default {
       let {eResult, eAlgoliaLogo} = this.$refs
       let style = eAlgoliaLogo.style
       style.top = eResult.offsetHeight + eResult.offsetTop + 'px'
-      style.width = eResult.offsetWidth - 1 + 'px'
+      style.width = eResult.offsetWidth + 'px'
     },
     bindResize () {
       window.addEventListener('scroll', this.resize)
@@ -229,15 +229,16 @@ export default {
   padding: 8px 12px!important;
 }
 .algoliaLogoBox {
-    padding: 6px 10px;
-    /* margin: 0 4px; */
-    /* border: 1px solid #ddd; */
-    text-align: right;
-    position: fixed;
-    background-color: #e4e7ed;
-    box-sizing: border-box;
-    border: 1px solid #d1d5da;
-    border-top: none;
+  padding: 6px 10px;
+  /* margin: 0 4px; */
+  /* border: 1px solid #ddd; */
+  text-align: right;
+  position: fixed;
+  background-color: #e4e7ed;
+  box-sizing: border-box;
+  border: 1px solid #d1d5da;
+  border-top: none;
+  margin-left: -1px;
 }
 .algoliaLogo {
     display: inline-block!important;
