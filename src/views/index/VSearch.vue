@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.search">
     <input ref="eIpt" v-model.trim="wd" type="text" placeholder="搜索" @blur="blur" @focus="focus">
-    <div v-show="show" :class="$style.result" @mousedown="$event.preventDefault()">
+    <div ref="eResult" v-show="show" :class="$style.result" @mousedown="$event.preventDefault()">
       <table>
         <tr v-for="item of searchResult" :key="item.id" @click="select(item)">
           <th>{{ item.name }}</th>
@@ -19,8 +19,8 @@
         :start-page="0"
         @load="load"
       />
-      <div :class="$style.algoliaLogoBox">
-        <a :class="$style.algoliaLogo" href="https://www.algolia.com"></a>
+      <div ref="eAlgoliaLogo" :class="$style.algoliaLogoBox">
+        <a :class="$style.algoliaLogo" href="https://www.algolia.com/docsearch"></a>
       </div>
     </div>
   </div>
@@ -59,6 +59,9 @@ export default {
         this.$refs.vScrollBottomLoadPage.close()
       }
     }
+  },
+  mounted () {
+    this.bindResize()
   },
   methods: {
     capture (path, content) {
@@ -123,7 +126,26 @@ export default {
         this.$refs.vScrollBottomLoadPage.hide()
       }
       complete(noNextPage)
+      await this.$nextTick()
+      this.resize()
+    },
+    resize () {
+      let {eResult, eAlgoliaLogo} = this.$refs
+      let style = eAlgoliaLogo.style
+      style.top = eResult.offsetHeight + eResult.offsetTop + 'px'
+      style.width = eResult.offsetWidth - 1 + 'px'
+    },
+    bindResize () {
+      window.addEventListener('scroll', this.resize)
+      window.addEventListener('resize', this.resize)
+    },
+    unbindResize () {
+      window.removeEventListener('scroll', this.resize)
+      window.removeEventListener('resize', this.resize)
     }
+  },
+  destroyed () {
+    this.unbindResize()
   }
 }
 </script>
@@ -144,7 +166,8 @@ export default {
   background-color: #fff;
   position: fixed;
   margin-top: -1px;
-  max-height: 80%;
+  max-height: 70%;
+  min-width: 300px;
   /* max-width: 100%; */
   overflow: auto;
   /* top: -1px; */
@@ -206,10 +229,15 @@ export default {
   padding: 8px 12px!important;
 }
 .algoliaLogoBox {
-  padding: 6px 10px;
-  margin: 0 4px;
-  border-top: 1px solid #ddd;
-  text-align: right;
+    padding: 6px 10px;
+    /* margin: 0 4px; */
+    /* border: 1px solid #ddd; */
+    text-align: right;
+    position: fixed;
+    background-color: #e4e7ed;
+    box-sizing: border-box;
+    border: 1px solid #d1d5da;
+    border-top: none;
 }
 .algoliaLogo {
     display: inline-block!important;
